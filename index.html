@@ -1,0 +1,115 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/calendar.css">
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/mustache.min.js"></script>
+		<script type="text/javascript" src="js/calendar.js"></script>
+	</head>
+	<body>
+	 	<div class="calendar-wrapper">
+			<div class="calendar-btn-group">
+			  <span class="batch-set" id="batchSet" data-value="0">批量设置</span>
+			  <span class="check-all" id="checkAll">全选</span>
+			</div>
+			<div class="calendar-content">
+			  <div class="calendar-header">
+			    <span class="calendar-prev"><em id="prevMonth">9</em>月</span>
+			    <span class="calendar-current"><em id="calendarYear">2016</em>-<em id="currentMonth">10</em></span>
+			    <span class="calendar-next"><em id="nextMonth">11</em>月</span>
+			  </div>
+		    <table class="table table-bordered calendar-week">
+		      <tbody><tr>
+		        <td>周日</td>
+		        <td>周一</td>
+		        <td>周二</td>
+		        <td>周三</td>
+		        <td>周四</td>
+		        <td>周五</td>
+		        <td>周六</td>
+		      </tr>
+		    </tbody></table>
+		    <table id="calendarContainer" class="table table-bordered calendar-main"><tbody><tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="calendar-no-order calendar-no-data" id="2016-10-01"><p class="calendar-day">1</p></td></tr><tr><td class="calendar-no-order calendar-no-data" id="2016-10-02"><p class="calendar-day">2</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-03"><p class="calendar-day">3</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-04"><p class="calendar-day">4</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-05"><p class="calendar-day">5</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-06"><p class="calendar-day">6</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-07"><p class="calendar-day">7</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-08"><p class="calendar-day">8</p></td></tr><tr><td class="calendar-no-order calendar-no-data" id="2016-10-09"><p class="calendar-day">9</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-10"><p class="calendar-day">10</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-11"><p class="calendar-day">11</p></td><td class="calendar-no-order calendar-no-data" id="2016-10-12"><p class="calendar-day">12</p></td><td class="calendar-order calendar-no-data" id="2016-10-13"><p class="calendar-day">13</p></td><td class="calendar-order calendar-no-data" id="2016-10-14"><p class="calendar-day">14</p></td><td class="calendar-order calendar-no-data" id="2016-10-15"><p class="calendar-day">15</p></td></tr><tr><td class="calendar-order calendar-no-data" id="2016-10-16"><p class="calendar-day">16</p></td><td class="calendar-order calendar-no-data" id="2016-10-17"><p class="calendar-day">17</p></td><td class="calendar-order calendar-no-data" id="2016-10-18"><p class="calendar-day">18</p></td><td class="calendar-order calendar-no-data" id="2016-10-19"><p class="calendar-day">19</p></td><td class="calendar-order calendar-no-data" id="2016-10-20"><p class="calendar-day">20</p></td><td class="calendar-order calendar-no-data calendar-order-select" id="2016-10-21"><p class="calendar-day">21</p></td><td class="calendar-order calendar-no-data" id="2016-10-22"><p class="calendar-day">22</p></td></tr><tr><td class="calendar-order calendar-no-data" id="2016-10-23"><p class="calendar-day">23</p></td><td class="calendar-order calendar-no-data" id="2016-10-24"><p class="calendar-day">24</p></td><td class="calendar-order calendar-no-data" id="2016-10-25"><p class="calendar-day">25</p></td><td class="calendar-order calendar-no-data" id="2016-10-26"><p class="calendar-day">26</p></td><td class="calendar-order calendar-no-data" id="2016-10-27"><p class="calendar-day">27</p></td><td class="calendar-order calendar-no-data" id="2016-10-28"><p class="calendar-day">28</p></td><td class="calendar-order calendar-no-data" id="2016-10-29"><p class="calendar-day">29</p></td></tr><tr><td class="calendar-order calendar-no-data" id="2016-10-30"><p class="calendar-day">30</p></td><td class="calendar-order calendar-no-data" id="2016-10-31"><p class="calendar-day">31</p></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+			</div>
+		  <div class="calendar-form">
+		    <div class="calendar-form-header">
+		      价格/库存设置
+		    </div>
+		    <div class="calendar-form-content">
+		      <!--status-->
+		      <div class="form-group">
+		        <label for="roomsName" class="control-label error">可预订状态：<em class="error-info">(未选择)</em>
+		        </label>
+		        <div class="order-status" id="orderStatus">
+		          <label class="order-status-inline">
+		            <input type="radio" name="orderStatus" id="inlineRadio1" value="1"> 可预订
+		          </label>
+		          <label class="order-status-inline">
+		            <input type="radio" name="orderStatus" id="inlineRadio2" value="0"> 不可预订
+		          </label>
+		        </div>
+		      </div>
+		      <!--price-->
+		      <div class="form-group">
+		        <label for="roomsName" class="control-label">供货价：<em class="error-info">(未填写)</em>
+		        </label>
+		        <div class="order-price" id="orderPrice">
+		          <input type="number"> 元/间
+		        </div>
+		      </div>
+		      <!--store status-->
+		      <div class="form-group">
+		        <label for="roomsName" class="control-label">库存状态：<em class="error-info">(未选择)</em>
+		        </label>
+		        <div class="order-status" id="storeStatus">
+		          <label class="order-status-inline">
+		            <input type="radio" name="storeStatus" id="immediateInventory" value="1"> 即时库存
+		          </label>
+		          <label class="order-status-inline">
+		            <input type="radio" name="storeStatus" id="underlineApply" value="2"> 线下申请
+		          </label>
+		        </div>
+		      </div>
+		      <!--number-->
+		      <div class="form-group" style="display: none;">
+		        <label for="roomsName" class="control-label">库存：
+		        <em class="error-info">(未填写)</em>
+		        </label>
+		        <div class="order-price" id="stroeNumber">
+		          <input type="number"> 间
+		        </div>
+		      </div>
+		      <!--breakfast-->
+		      <div class="form-group">
+		        <label for="roomsName" class="control-label">是否含早：
+		        <em class="error-info">(未选择)</em>
+		        </label>
+		        <div class="order-status" id="hasBreakfast">
+		          <label class="order-status-inline">
+		            <input type="radio" name="hasBreakfast" id="inlineRadio1" value="0"> 不含早
+		          </label>
+		          <label class="order-status-inline">
+		            <input type="radio" name="hasBreakfast" id="inlineRadio2" value="1"> 含早
+		          </label>
+		        </div>
+		      </div>
+		      <!--btn-->
+		      <div class="form-group">
+		        <input type="button" name="" value="保存" class="btn-submit" id="setBtnSubmit">
+		        <input type="reset" name="" value="重置" class="btn-reset" id="setBtnReset">
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<script>
+		$(function(){
+			new ZBJ.CalendarOperation();
+		})
+		</script>
+
+	</body>
+</html>
