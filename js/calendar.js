@@ -3,6 +3,7 @@ exports.ZBJ = exports.ZBJ || {};
 exports.ZBJ.CalendarOperation = (function() {
   
   function CalendarOperation() {
+
     CalendarOperation._formReset();
     CalendarOperation._initForm();
     CalendarOperation._initDate();
@@ -12,7 +13,7 @@ exports.ZBJ.CalendarOperation = (function() {
     CalendarOperation._prevMonth();
     CalendarOperation._nextMonth();
   }
-
+  // #初始化当月日历
   CalendarOperation._initDate = function() {
     var month, nextMonth, prevMonth, today, year;
     today = new Date();
@@ -23,6 +24,7 @@ exports.ZBJ.CalendarOperation = (function() {
     return CalendarOperation._initPage(year, month, prevMonth, nextMonth);
   };
 
+  // #初始化页面
   CalendarOperation._initPage = function(year, month, prevMonth, nextMonth, json) {
     var calendarHtml;
     $('#calendarYear').text(year);
@@ -36,6 +38,7 @@ exports.ZBJ.CalendarOperation = (function() {
     return $('#calendarContainer').html(calendarHtml);
   };
 
+  // #获取本月最后一天星期几
   CalendarOperation._lastWek = function(monthDay, monthFirstDay) {
     var day, restDay;
     day = monthDay - (7 - monthFirstDay);
@@ -48,6 +51,7 @@ exports.ZBJ.CalendarOperation = (function() {
     return restDay;
   };
 
+  // #日历逻辑
   CalendarOperation._setCalendar = function(year, month, json) {
     var calendar, day, dayVal, daynumber, firstnumber, i, j, k, l, lastnumber, m, monthAllDay, n, nowDay, nowDayDate, nowDayMonth, number, o, p, q, ref, ref1, ref2, ref3, ref4, tdId, weeknumber;
     nowDayMonth = new Date().getMonth() + 1;
@@ -151,6 +155,7 @@ exports.ZBJ.CalendarOperation = (function() {
     return calendar;
   };
 
+  // # 判断两个月份是否相差12个月
   CalendarOperation._monthDiff = function(to) {
     var dateFrom, dateTo, from, monthDiff;
     from = new Date().getFullYear() + '-' + (parseInt(new Date().getMonth()) + 1);
@@ -165,6 +170,7 @@ exports.ZBJ.CalendarOperation = (function() {
     return monthDiff;
   };
 
+  // #上个月
   CalendarOperation._prevMonth = function() {
     return $('.calendar-prev').on('click', function(e) {
       var ajaxVal, from, month, monthDiff, nextMonth, prevMonth, url, year;
@@ -212,6 +218,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #下个月
   CalendarOperation._nextMonth = function() {
     return $('.calendar-next').on('click', function(e) {
       var ajaxVal, from, month, monthDiff, nextMonth, prevMonth, url, year;
@@ -259,6 +266,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #数据注入
   CalendarOperation._dataInject = function(data) {
     var day, idx, j, len, noOrderTemplate, noStatusRender, nowDay, nowDayDate, nowDayMonth, orderTemplate, statusRender, unOrderTemplate, unStatusRender;
     orderTemplate = $('#calendarOrder').html();
@@ -324,6 +332,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #开启批量设置
   CalendarOperation._isBatchSet = function() {
     return $('.calendar-wrapper').on('click', '#batchSet', function(e) {
       if ($(this).text() === '批量设置') {
@@ -343,6 +352,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #全选
   CalendarOperation._checkAll = function() {
     return $('.calendar-wrapper').on('click', '#checkAll', function(e) {
       $('.btn-reset').trigger('click');
@@ -363,6 +373,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #点击日期初始化表单
   CalendarOperation._initForm = function() {
     $('.calendar-wrapper').on('click', '.calendar-order', function(e) {
       var breakfast, orderNumber, orderStatus, storeNumber, storeStatus, supplierPrice;
@@ -485,6 +496,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #表单提交
   CalendarOperation._setBtnSubmit = function() {
     return $('.calendar-wrapper').on('click', '#setBtnSubmit', function(e) {
       var dateArr, dateObj, hasBreakfastVal, month, orderPriceVal, orderStatusVal, storeStatusVal, stroeNumberVal, url, year;
@@ -590,6 +602,7 @@ exports.ZBJ.CalendarOperation = (function() {
     });
   };
 
+  // #表单重置
   CalendarOperation._formReset = function() {
     return $('.calendar-wrapper').on('click', '#setBtnReset', function(e) {
       return $('.calendar-form-content .form-group').each(function() {
