@@ -15,13 +15,19 @@ exports.ZBJ.CalendarOperation = (function() {
   }
   // #初始化当月日历
   CalendarOperation._initDate = function() {
-    var month, nextMonth, prevMonth, today, year;
+    var month, nextMonth, prevMonth, today, year, ajaxVal;
     today = new Date();
     year = today.getFullYear();
     month = today.getMonth() + 1;
-    prevMonth = month - 1;
+    if (month == 1) {
+      prevMonth = 12
+    }else {
+      prevMonth = month - 1;
+    }
     nextMonth = month + 1;
-    return CalendarOperation._initPage(year, month, prevMonth, nextMonth);
+    CalendarOperation._initPage(year, month, prevMonth, nextMonth);
+    ajaxVal = year + '-' + month + '-' + '01';
+    CalendarOperation._getAjaxdata(ajaxVal);
   };
 
   // #初始化页面
@@ -35,7 +41,7 @@ exports.ZBJ.CalendarOperation = (function() {
     $('#prevMonth').text(prevMonth);
     $('#nextMonth').text(nextMonth);
     calendarHtml = CalendarOperation._setCalendar(year, month, json);
-    return $('#calendarContainer').html(calendarHtml);
+    $('#calendarContainer').html(calendarHtml);
   };
 
   // #获取本月最后一天星期几
@@ -191,7 +197,7 @@ exports.ZBJ.CalendarOperation = (function() {
       from = year + '-' + month;
       monthDiff = CalendarOperation._monthDiff(from);
       if (monthDiff > 12) {
-        return MOW.alert('warning', '只能选择12个月内的日期');
+        MOW.alert('warning', '只能选择12个月内的日期');
       } else {
         CalendarOperation._initPage(year, month, prevMonth, nextMonth);
         if (month < 10) {
@@ -200,27 +206,14 @@ exports.ZBJ.CalendarOperation = (function() {
           month = month;
         }
         ajaxVal = year + '-' + month + '-' + '01';
-        url = $('.rooms-active').find('.room-avails-btn').data('url');
-        return $.ajax(url, {
-          type: 'get',
-          dataType: 'json',
-          data: {
-            data_month: ajaxVal
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-            return console.log(errorThrown);
-          },
-          success: function(data, textStatus, jqXHR) {
-            return CalendarOperation._dataInject(data);
-          }
-        });
+        CalendarOperation._getAjaxdata(ajaxVal);
       }
     });
   };
 
   // #下个月
   CalendarOperation._nextMonth = function() {
-    return $('.calendar-next').on('click', function(e) {
+    $('.calendar-next').on('click', function(e) {
       var ajaxVal, from, month, monthDiff, nextMonth, prevMonth, url, year;
       year = parseInt($('#calendarYear').text());
       month = parseInt($('#currentMonth').text()) + 1;
@@ -239,7 +232,7 @@ exports.ZBJ.CalendarOperation = (function() {
       from = year + '-' + month;
       monthDiff = CalendarOperation._monthDiff(from);
       if (monthDiff > 12) {
-        return MOW.alert('warning', '只能选择12个月内的日期');
+        MOW.alert('warning', '只能选择12个月内的日期');
       } else {
         CalendarOperation._initPage(year, month, prevMonth, nextMonth);
         if (month < 10) {
@@ -248,23 +241,30 @@ exports.ZBJ.CalendarOperation = (function() {
           month = month;
         }
         ajaxVal = year + '-' + month + '-' + '01';
-        url = $('.rooms-active').find('.room-avails-btn').data('url');
-        return $.ajax(url, {
-          type: 'get',
-          dataType: 'json',
-          data: {
-            data_month: ajaxVal
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-            return console.log(errorThrown);
-          },
-          success: function(data, textStatus, jqXHR) {
-            return CalendarOperation._dataInject(data);
-          }
-        });
+        CalendarOperation._getAjaxdata(ajaxVal);
       }
     });
   };
+
+  //ajax get 获取数据
+  CalendarOperation._getAjaxdata = function(date) {
+    url = '/index';
+    $.ajax({
+      url: url,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        data_month: date
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success: function(data, textStatus, jqXHR) {
+        console.log(data);
+        CalendarOperation._dataInject(data);
+      }
+    });    
+  }
 
   // #数据注入
   CalendarOperation._dataInject = function(data) {
@@ -315,7 +315,7 @@ exports.ZBJ.CalendarOperation = (function() {
         }
       }
     }
-    return $('.calendar-order').each(function(idx) {
+    $('.calendar-order').each(function(idx) {
       var breakfastVal, storeStatus;
       breakfastVal = $(this).find('.calendar-info-breakfask').text();
       if (breakfastVal === 'true') {
@@ -325,49 +325,49 @@ exports.ZBJ.CalendarOperation = (function() {
       }
       storeStatus = $(this).data('store-status');
       if (storeStatus === 'inventory_confirm') {
-        return $(this).find('.calendar-store-status').hide();
+        $(this).find('.calendar-store-status').hide();
       } else {
-        return $(this).find('.calendar-store-status').show();
+        $(this).find('.calendar-store-status').show();
       }
     });
   };
 
   // #开启批量设置
   CalendarOperation._isBatchSet = function() {
-    return $('.calendar-wrapper').on('click', '#batchSet', function(e) {
+    $('.calendar-wrapper').on('click', '#batchSet', function(e) {
       if ($(this).text() === '批量设置') {
         $('#checkAll').css('display', 'inline-block');
         $(this).text('取消批量设置');
         $(this).data('value', '1');
-        return $('#stroeNumber').parents('.form-group').show();
+        $('#stroeNumber').parents('.form-group').show();
       } else {
         $(this).text('批量设置');
         $('#checkAll').css('display', 'none');
         $(this).data('value', '0');
         $('.calendar-order').each(function(idx) {
-          return $(this).removeClass('calendar-order-select');
+          $(this).removeClass('calendar-order-select');
         });
-        return $('.btn-reset').trigger('click');
+        $('.btn-reset').trigger('click');
       }
     });
   };
 
   // #全选
   CalendarOperation._checkAll = function() {
-    return $('.calendar-wrapper').on('click', '#checkAll', function(e) {
+    $('.calendar-wrapper').on('click', '#checkAll', function(e) {
       $('.btn-reset').trigger('click');
       if ($(this).text() === '全选') {
         $(this).text('取消全选');
         $('.calendar-order').each(function(idx) {
-          return $(this).addClass('calendar-order-select');
+          $(this).addClass('calendar-order-select');
         });
-        return $('.calendar-no-order').each(function(idx) {
-          return $(this).removeClass('calendar-order-select');
+        $('.calendar-no-order').each(function(idx) {
+          $(this).removeClass('calendar-order-select');
         });
       } else {
         $(this).text('全选');
-        return $('.calendar-order').each(function(idx) {
-          return $(this).removeClass('calendar-order-select');
+        $('.calendar-order').each(function(idx) {
+          $(this).removeClass('calendar-order-select');
         });
       }
     });
@@ -402,7 +402,7 @@ exports.ZBJ.CalendarOperation = (function() {
       }
       if ($(this).hasClass('calendar-no-order')) {
         $('.calendar-order').each(function() {
-          return $(this).removeClass('calendar-order-select');
+          $(this).removeClass('calendar-order-select');
         });
         $("input[name='orderStatus'][value=0]").prop("disabled", true);
         $("input[name='orderStatus'][value=1]").prop("disabled", true);
@@ -413,7 +413,7 @@ exports.ZBJ.CalendarOperation = (function() {
         $("input[name='hasBreakfast'][value=1]").prop("disabled", true);
         $("input[name='hasBreakfast'][value=0]").prop("disabled", true);
         $('#setBtnSubmit').prop("disabled", true);
-        return $('#setBtnReset').prop("disabled", true);
+        $('#setBtnReset').prop("disabled", true);
       } else {
         $("input[name='orderStatus'][value=0]").prop("disabled", false);
         $("input[name='orderStatus'][value=1]").prop("disabled", false);
@@ -442,7 +442,7 @@ exports.ZBJ.CalendarOperation = (function() {
           $("input[name='storeStatus'][value=2]").prop("checked", false);
           $('#stroeNumber input').val('');
           $("input[name='hasBreakfast'][value=1]").prop("checked", false);
-          return $("input[name='hasBreakfast'][value=0]").prop("checked", false);
+          $("input[name='hasBreakfast'][value=0]").prop("checked", false);
         } else {
           $(this).addClass('calendar-order-select').siblings('.calendar-order').removeClass('calendar-order-select');
           $(this).parents('tr').siblings('tr').find('.calendar-order').removeClass('calendar-order-select');
@@ -454,7 +454,7 @@ exports.ZBJ.CalendarOperation = (function() {
             $("input[name='storeStatus'][value=2]").prop("checked", false);
             $('#stroeNumber input').val('');
             $("input[name='hasBreakfast'][value=1]").prop("checked", false);
-            return $("input[name='hasBreakfast'][value=0]").prop("checked", false);
+            $("input[name='hasBreakfast'][value=0]").prop("checked", false);
           } else {
             orderStatus = $(this).data('order-status');
             storeStatus = $(this).data('store-status');
@@ -477,28 +477,28 @@ exports.ZBJ.CalendarOperation = (function() {
             }
             $('#stroeNumber input').val(storeNumber);
             if (breakfast) {
-              return $("input[name='hasBreakfast'][value=1]").prop("checked", true);
+              $("input[name='hasBreakfast'][value=1]").prop("checked", true);
             } else {
-              return $("input[name='hasBreakfast'][value=0]").prop("checked", true);
+              $("input[name='hasBreakfast'][value=0]").prop("checked", true);
             }
           }
         }
       }
     });
-    return $('.calendar-wrapper').on('click', '#storeStatus input', function(e) {
+    $('.calendar-wrapper').on('click', '#storeStatus input', function(e) {
       var storeStatusVal;
       storeStatusVal = parseInt($(this).val());
       if (storeStatusVal === 1) {
-        return $('#stroeNumber').parents('.form-group').show();
+        $('#stroeNumber').parents('.form-group').show();
       } else if (storeStatusVal === 2) {
-        return $('#stroeNumber').parents('.form-group').hide();
+        $('#stroeNumber').parents('.form-group').hide();
       }
     });
   };
 
   // #表单提交
   CalendarOperation._setBtnSubmit = function() {
-    return $('.calendar-wrapper').on('click', '#setBtnSubmit', function(e) {
+    $('.calendar-wrapper').on('click', '#setBtnSubmit', function(e) {
       var dateArr, dateObj, hasBreakfastVal, month, orderPriceVal, orderStatusVal, storeStatusVal, stroeNumberVal, url, year;
       year = $('#calendarYear').text();
       month = $('#currentMonth').text();
@@ -510,7 +510,7 @@ exports.ZBJ.CalendarOperation = (function() {
           day = '0' + day;
         }
         date = year + '-' + month + '-' + day;
-        return dateArr.push(date);
+        dateArr.push(date);
       });
       if (dateArr.length < 1) {
         MOW.alert('warning', '请先选择要修改的日期');
@@ -551,6 +551,11 @@ exports.ZBJ.CalendarOperation = (function() {
       } else {
         $('#hasBreakfast').siblings('.control-label').removeClass('error');
       }
+      if (parseInt(orderStatusVal) == 0) {
+        orderStatusVal = 'status_unavailable';
+      }else {
+        orderStatusVal = 'status_available';
+      }
       dateObj = {
         status: orderStatusVal,
         supplier_price: orderPriceVal,
@@ -558,8 +563,8 @@ exports.ZBJ.CalendarOperation = (function() {
         total_inventory: stroeNumberVal,
         has_breakfast: hasBreakfastVal
       };
-      url = $('.rooms-active').find('.room-avails-btn').data('url');
-      return $.ajax(url, {
+      url = '/index';
+      $.ajax(url, {
         type: 'post',
         dataType: 'json',
         data: {
@@ -568,35 +573,12 @@ exports.ZBJ.CalendarOperation = (function() {
         },
         error: function(jqXHR, textStatus, errorThrown) {
           console.log(errorThrown);
-          return MOW.alert('error', '保存失败!');
+          MOW.alert('error', '保存失败!');
         },
         success: function(data, textStatus, jqXHR) {
+          console.log(data);
           var updateRender, updateTemplate;
-          CalendarOperation._dataInject(JSON.parse(data.datas));
-          if (dateArr.length < 2) {
-            if (data.error_avails.length > 0 && data.update_avails.length < 1) {
-              MOW.alert('error', data.error_avails[0].errors);
-            }
-            if (data.error_avails.length < 1 && data.update_avails.length > 0) {
-              MOW.alert('success', '保存成功');
-            }
-          } else {
-            updateTemplate = $('#updateCalendarContent').html();
-            Mustache.parse(updateTemplate);
-            updateRender = Mustache.render(updateTemplate, {
-              update_avails: data.update_avails,
-              error_avails: data.error_avails
-            });
-            $('#updateCalendar').html(updateRender);
-            $('#updateCalendar').modal('show');
-          }
-          if (data.error_avails.length > 0) {
-            return $.each(data.error_avails, function(index, val) {
-              return $('#' + val.day).addClass('calendar-order-select');
-            });
-          } else {
-            return $('#setBtnReset').trigger('click');
-          }
+          CalendarOperation._dataInject(data);
         }
       });
     });
@@ -604,9 +586,9 @@ exports.ZBJ.CalendarOperation = (function() {
 
   // #表单重置
   CalendarOperation._formReset = function() {
-    return $('.calendar-wrapper').on('click', '#setBtnReset', function(e) {
-      return $('.calendar-form-content .form-group').each(function() {
-        return $(this).children('.control-label').removeClass('error');
+    $('.calendar-wrapper').on('click', '#setBtnReset', function(e) {
+      $('.calendar-form-content .form-group').each(function() {
+        $(this).children('.control-label').removeClass('error');
       });
     });
   };

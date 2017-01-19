@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<div class="ss">123</div>
+	<script src="./js/jquery.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			// $.ajax({
+			// 	url: '/index',
+			// 	type: 'get',
+			// 	dataType: 'json'
+			// })
+			// .done(function(res) {
+			// 	console.log(res);
+			// })
+			// .fail(function() {
+			// 	console.log("error");
+			// })
+			// .always(function() {
+			// 	console.log("complete");
+			// });
+			var data = { age: '1', firstName: 'li'}
+			$.ajax({
+				url: '/index',
+				type: 'post',
+				dataType: 'json',
+				data: data
+			})
+			.done(function(res) {
+				console.log(res);
+			})
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
+
+
+
+		});
+	</script>
+</body>
+</html>

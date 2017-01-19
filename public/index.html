@@ -3,10 +3,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title></title>
-		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
 		<link rel="stylesheet" href="css/calendar.css">
-		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/mustache.min.js"></script>
 		<script type="text/javascript" src="js/calendar.js"></script>
 	</head>
@@ -32,8 +32,13 @@
 		        <td>周五</td>
 		        <td>周六</td>
 		      </tr>
-		    </tbody></table>
-		    <table id="calendarContainer" class="table table-bordered calendar-main"></table>
+		    </tbody>
+		    </table>
+		    <table class="table table-bordered calendar-main">
+		    	<tbody id="calendarContainer">
+		    		
+		    	</tbody>
+		    </table>
 			</div>
 		  <div class="calendar-form">
 		    <div class="calendar-form-header">
@@ -105,6 +110,30 @@
 		    </div>
 		  </div>
 		</div>
+		<script id="calendarOrder" type="x-tmpl-mustache">
+		  <td id={{data.date}} class='calendar-order' data-order-status={{data.status}} data-store-status={{data.inventory_type}} data-order-number={{data.inventory}} data-store-number={{data.total_inventory}} data-breakfast={{data.has_breakfast}} data-supplier-price={{data.supplier_price}}>
+		    <p class='calendar-day'>{{day}}</p>
+		    <p class='calendar-order-info calendar-store-status'>{{data.inventory}}/{{data.total_inventory}}</p>
+		    <p class='calendar-order-info calendar-info-breakfask'>{{data.has_breakfast}}</p>
+		    <p class='calendar-order-price'>{{data.supplier_price}}</p>
+		  </td>
+		</script>
+
+		<script id="calendarUnOrder" type="x-tmpl-mustache">
+		  <td id={{data.date}} class='calendar-order calendar-un-order' data-order-status={{data.status}} data-store-status={{data.inventory_type}} data-order-number={{data.inventory}} data-store-number={{data.total_inventory}} data-breakfast={{data.has_breakfast}} data-supplier-price={{data.supplier_price}}>
+		    <p class='calendar-day'>{{day}}</p>
+		    <p class='calendar-unorder-info'>不可预订</p>
+		  </td>
+		</script>
+
+		<script id="calendarNoOrder" type="x-tmpl-mustache">
+		  <td id={{data.date}} class='calendar-order calendar-no-order' data-order-status={{data.status}} data-store-status={{data.inventory_type}} data-order-number={{data.inventory}} data-store-number={{data.total_inventory}} data-breakfast={{data.has_breakfast}} data-supplier-price={{data.supplier_price}}>
+		    <p class='calendar-day'>{{day}}</p>
+		    <p class='calendar-order-info calendar-store-status'>{{data.inventory}}/{{data.total_inventory}}</p>
+		    <p class='calendar-order-info calendar-info-breakfask'>{{data.has_breakfast}}</p>
+		    <p class='calendar-order-price'>{{data.supplier_price}}</p>
+		  </td>
+		</script>
 		<script>
 		$(function(){
 			new ZBJ.CalendarOperation();
